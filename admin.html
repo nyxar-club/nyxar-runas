@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel Admin — Runas Mágicas Nyxar</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="assets/favicon-32.png">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div id="admin-loading" class="shell">
+  <div class="auth-wrap"><p style="color:var(--ink-dim);font-size:12px;letter-spacing:.1em;text-transform:uppercase;">Verificando acceso…</p></div>
+</div>
+
+<div id="admin-login" class="shell hidden">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <img class="auth-logo" src="assets/runa.png" alt="">
+      <h1 class="auth-title" style="color:var(--violet-bright);">Panel Admin</h1>
+      <p class="auth-sub">Nyxar · Acceso restringido</p>
+      <form id="admin-login-form">
+        <div class="field">
+          <label for="admin-email">Correo</label>
+          <input type="email" id="admin-email" required autocomplete="email">
+        </div>
+        <div class="field">
+          <label for="admin-password">Contraseña</label>
+          <input type="password" id="admin-password" required autocomplete="current-password">
+        </div>
+        <p class="form-error" id="admin-login-error"></p>
+        <button class="btn btn-violet" type="submit">Entrar</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="admin-unauthorized" class="unauthorized hidden">
+  <img src="assets/runa.png" alt="" style="width:54px;height:54px;margin-bottom:14px;opacity:.5">
+  <h2 style="font-family:var(--serif);color:var(--ink);margin:0 0 8px;">No autorizado</h2>
+  <p>Esta cuenta no tiene acceso al panel de administración.</p>
+  <button class="btn btn-ghost" id="btn-admin-logout" style="max-width:220px;margin-top:16px;">Cerrar sesión</button>
+</div>
+
+<div id="admin-dashboard" class="admin-shell hidden">
+  <div class="admin-header">
+    <h1>Panel Nyxar — Runas</h1>
+    <button class="icon-btn" id="btn-dash-logout" title="Cerrar sesión" aria-label="Cerrar sesión">⏻</button>
+  </div>
+
+  <div class="admin-grid">
+    <div class="section">
+      <h2>Generar código</h2>
+      <p class="hint">Generá un código y mandaselo al cliente por DM tras su compra. Cada código se puede canjear una sola vez.</p>
+      <button class="btn btn-gold" id="btn-generate-code" type="button">Generar código nuevo</button>
+      <div id="new-code-display"></div>
+      <h3 style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim);margin:20px 0 0;">Últimos códigos generados</h3>
+      <div class="codes-list" id="codes-list"></div>
+    </div>
+
+    <div class="section">
+      <h2>Premios pendientes de entrega</h2>
+      <p class="hint">Marcá como entregado cuando ya le diste el premio al cliente.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Cliente</th><th>Premio</th><th>Fecha</th><th></th></tr></thead>
+          <tbody id="pending-prizes-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Clientes</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Correo</th><th>Runas totales</th><th>Giros disponibles</th></tr></thead>
+          <tbody id="customers-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="js/admin.js"></script>
+</body>
+</html>

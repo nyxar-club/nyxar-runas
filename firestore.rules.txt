@@ -1,0 +1,62 @@
+// REGLAS DE FIRESTORE — Runas Mágicas Nyxar
+//
+// Cómo usar este archivo:
+// 1. Entrá a https://console.firebase.google.com → tu proyecto "nyxar-runas"
+// 2. Menú izquierdo → "Compilación" → "Firestore Database" → pestaña "Reglas"
+// 3. Borrá lo que esté ahí y pegá TODO el bloque de abajo (sin esta sección de comentarios)
+// 4. Click en "Publicar"
+//
+// Sin esto, Firestore en modo producción rechaza todas las lecturas y escrituras
+// por defecto, así que la app no va a funcionar hasta que publiques estas reglas.
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.email == 'nyxar.sv@gmail.com';
+    }
+
+    // ---- Cuentas de clientes ----
+    match /users/{uid} {
+      allow get: if isSignedIn() && (request.auth.uid == uid || isAdmin());
+      allow list: if isAdmin();
+      allow create: if isSignedIn() && request.auth.uid == uid
+                    && request.resource.data.totalRunes == 0
+                    && request.resource.data.spinsUsed == 0;
+      allow update: if isAdmin();
+      allow update: if isSignedIn() && request.auth.uid == uid
+                    && request.resource.data.email == resource.data.email
+                    && request.resource.data.totalRunes is number
+                    && request.resource.data.totalRunes >= resource.data.totalRunes
+                    && request.resource.data.spinsUsed is number
+                    && request.resource.data.spinsUsed >= resource.data.spinsUsed;
+    }
+
+    // ---- Códigos de canje ----
+    match /codes/{code} {
+      allow get: if isSignedIn();
+      allow list: if isAdmin();
+      allow create: if isAdmin();
+      allow delete: if isAdmin();
+      allow update: if isSignedIn()
+                    && resource.data.status == 'unused'
+                    && request.resource.data.status == 'used'
+                    && request.resource.data.usedBy == request.auth.uid
+                    && request.resource.data.createdAt == resource.data.createdAt;
+    }
+
+    // ---- Premios ganados en la ruleta ----
+    match /prizes/{prizeId} {
+      allow get: if isSignedIn() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow list: if isAdmin() || (isSignedIn() && resource.data.uid == request.auth.uid);
+      allow create: if isSignedIn()
+                    && request.resource.data.uid == request.auth.uid
+                    && request.resource.data.fulfilled == false;
+      allow update: if isAdmin();
+    }
+  }
+}
