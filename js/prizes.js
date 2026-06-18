@@ -4,7 +4,7 @@
 export const RUNES_PER_SPIN = 6;
 
 export const PRIZES = [
-  { key: "descuento",            label: "Descuento exclusivo 16%",   prob: 1 / 6 },
+  { key: "descuento",            label: "Descuento exclusivo 15%",   prob: 1 / 6 },
   { key: "accesorio_dorado",     label: "Accesorio dorado",          prob: 1 / 6 },
   { key: "accesorio_plateado",   label: "Accesorio plateado",        prob: 1 / 6 },
   { key: "envio_gratis",         label: "Envío gratis",              prob: 0.36 },
